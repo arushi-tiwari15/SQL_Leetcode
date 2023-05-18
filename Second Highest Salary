@@ -1,0 +1,15 @@
+# Write your MySQL query statement below
+SELECT
+MAX(CASE
+WHEN SALARY IS NOT NULL THEN SALARY
+ELSE null
+END ) AS SecondHighestSalary
+FROM (
+
+SELECT
+Salary,
+dense_rank() OVER (ORDER BY SALARY DESC) as rank_salary
+FROM
+Employee
+) rank_table
+WHERE rank_salary = 2
