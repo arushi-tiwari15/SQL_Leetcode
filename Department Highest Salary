@@ -1,0 +1,28 @@
+# Write your MySQL query statement below
+WITH CTE AS (SELECT
+    *,
+    DENSE_RANK() OVER(PARTITION BY DepartmentID ORDER BY salary DESC) RANKED
+FROM
+    Employee
+)
+SELECT
+    d.name Department ,
+    c.name Employee,
+    c.salary
+FROM
+    CTE c
+INNER JOIN
+    Department d on c.departmentid = d.id
+WHERE
+    EXISTS (
+
+        SELECT 1
+        FROM
+            CTE C1
+        WHERE
+            c.id = c1.id
+        AND
+            c.departmentid = c1.departmentid
+        AND
+            C1.RANKED = 1
+    )
